@@ -25,6 +25,7 @@
             --color-border: #E2E8F0;
             --color-warning: #D97706;
             --color-success: #059669;
+            --color-success-light: #ECFDF5;
             --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 12px rgba(29, 97, 157, 0.06);
@@ -178,6 +179,28 @@
             text-align: center;
             border: 1px dashed var(--color-border);
             margin-top: 1.5rem;
+        }
+
+        /* Nhãn bảo mật an toàn - Cam kết không thu thập dữ liệu */
+        .privacy-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--color-success);
+            background-color: var(--color-success-light);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            margin: 1rem auto 0 auto;
+            font-weight: 600;
+            border: 1px solid rgba(5, 150, 105, 0.15);
+            text-align: center;
+            max-width: 100%;
+        }
+
+        .privacy-badge svg {
+            flex-shrink: 0;
         }
 
         /* Buttons & Actions */
@@ -730,6 +753,17 @@
                 Đây là công cụ tự phản tư, không phải công cụ đánh giá con người, đánh giá năng lực hay chẩn đoán tâm lý.
             </div>
 
+            <!-- Cam kết bảo mật an toàn hiển thị trực quan ngay tại màn hình bắt đầu -->
+            <div style="text-align: center; display: flex; flex-direction: column;">
+                <div class="privacy-badge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    Hoàn toàn ẩn danh • Không thu thập Email • Không cần Đăng nhập
+                </div>
+            </div>
+
             <div class="action-group">
                 <button class="btn btn-primary" id="btn-start">
                     Bắt đầu phản tư
@@ -764,6 +798,17 @@
                 <div class="scale-item">
                     <span class="scale-num">5</span>
                     <span class="scale-text">Luôn luôn</span>
+                </div>
+            </div>
+
+            <!-- Cam kết bảo mật tại trang hướng dẫn -->
+            <div style="text-align: center; display: flex; flex-direction: column;">
+                <div class="privacy-badge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    Dữ liệu được xử lý trực tiếp trên thiết bị của bạn
                 </div>
             </div>
 
@@ -931,7 +976,7 @@
                     { id: "environment-6", text: "Tôi góp phần tạo nên bầu không khí tích cực và dễ chịu tại nơi làm việc.", reverse: false },
                     { id: "environment-7", text: "Tôi cân nhắc tác động của hành vi của mình đến sự thoải mái và thuận tiện của người khác.", reverse: false },
                     { id: "environment-8", text: "Tôi trân trọng những nỗ lực nhằm xây dựng một môi trường làm việc tích cực.", reverse: false },
-                    { id: "environment-9", text: "Tôi lên tiếng hoặc đề xuất khi nhận thấy môi trường làm việc có thể được cải thiện.", reverse: false },
+                    { id: "environment-9", text: "Tôi lên tiếng hoặc đề xuất khi nhận thấy môi trường làm việc có thể được cải thiện.", stroke: false, reverse: false },
                     { id: "environment-10", text: "Tôi cố gắng để lại không gian chung trong tình trạng tốt hơn so với khi mình sử dụng.", reverse: false },
                     { id: "environment-11", text: "Tôi có khả năng thích nghi và duy trì tinh thần tích cực ngay cả khi điều kiện làm việc chưa thực sự thuận lợi.", reverse: false },
                     { id: "environment-12", text: "Tôi cảm thấy mình có trách nhiệm và sự gắn bó đối với môi trường làm việc của mình.", reverse: false }
