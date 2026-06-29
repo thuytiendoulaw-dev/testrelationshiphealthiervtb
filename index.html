@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mối quan hệ trong công sở - Healthier VietinBank</title>
+    <style>
+        /* CSS Reset & Thiết lập nền tảng */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --color-bg: #FAF9F6; /* Off-white ấm áp */
+            --color-card-bg: #FFFFFF;
+            --color-primary: #1d619d; /* Xanh dương VietinBank */
+            --color-primary-light: #F0F5FA; /* Xanh nhạt dịu mắt */
+            --color-accent: #b62a4b; /* Đỏ Crimson ấm áp đại diện cho trái tim khỏe mạnh */
+            --color-accent-light: #FDF2F4;
+            --color-text-main: #1E293B; /* Xám đậm hiện đại */
+            --color-text-muted: #576574; /* Xám xanh dịu nhẹ */
+            --color-border: #E2E8F0;
+            --color-warning: #D97706;
+            --color-success: #059669;
+            --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(29, 97, 157, 0.06);
+            --shadow-lg: 0 10px 25px -5px rgba(29, 97, 157, 0.08);
+            --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--color-bg);
+            color: var(--color-text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1rem;
+            overflow-x: hidden;
+        }
+
+        /* Container chính */
+        .app-container {
+            width: 100%;
+            max-width: 680px;
+            margin: 1.5rem auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 640px) {
+            .app-container {
+                margin: 0.5rem auto;
+                gap: 1rem;
+            }
+        }
+
+        /* Vùng Logo Thương hiệu */
+        .brand-header-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        /* Logo thực tế từ file ảnh */
+        .brand-logo-img {
+            max-width: 210px;
+            height: auto;
+            object-fit: contain;
+            transition: var(--transition-smooth);
+        }
+
+        /* Logo dự phòng vẽ bằng SVG khi offline / không có ảnh */
+        .brand-logo-fallback {
+            display: none; /* Sẽ hiển thị qua JS nếu ảnh lỗi */
+            width: 220px;
+            height: auto;
+        }
+
+        /* Card chung */
+        .card {
+            background-color: var(--color-card-bg);
+            border-radius: 18px;
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-smooth);
+            border: 1px solid rgba(29, 97, 157, 0.05);
+        }
+
+        @media (max-width: 640px) {
+            .card {
+                padding: 1.5rem 1.25rem;
+                border-radius: 14px;
+            }
+        }
+
+        /* Trạng thái màn hình */
+        .screen {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Typography */
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        @media (max-width: 640px) {
+            h2 {
+                font-size: 1.4rem;
+                margin-bottom: 1.2rem;
+            }
+        }
+
+        .quote-box {
+            background-color: var(--color-primary-light);
+            border-left: 4px solid var(--color-primary);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--color-text-main);
+        }
+
+        @media (max-width: 640px) {
+            .quote-box {
+                padding: 1.25rem 1rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        .description {
+            color: var(--color-text-muted);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .note-box {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            background-color: var(--color-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px dashed var(--color-border);
+            margin-top: 1.5rem;
+        }
+
+        /* Buttons & Actions */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.85rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            width: 100%;
+            text-align: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #154673;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-primary-light);
+            color: var(--color-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #dee8f1;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1.5px solid var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--color-primary-light);
+        }
+
+        .action-group {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        /* Màn hình hướng dẫn */
+        .scale-info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .scale-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.85rem 1rem;
+            background-color: var(--color-bg);
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+        }
+
+        .scale-num {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background-color: var(--color-primary);
+            color: white;
+            font-weight: 700;
+            border-radius: 50%;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .scale-text {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Màn hình khảo sát */
+        .section-header-box {
+            margin-bottom: 2rem;
+        }
+
+        .section-tag {
+            display: inline-block;
+            background-color: var(--color-primary-light);
+            color: var(--color-primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-desc {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Tiến trình */
+        .progress-container {
+            margin-bottom: 2rem;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-track {
+            height: 8px;
+            background-color: var(--color-border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--color-primary);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Danh sách câu hỏi */
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .question-item {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .question-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            font-weight: 550;
+            color: var(--color-text-main);
+            line-height: 1.5;
+        }
+
+        /* Các nút chọn mức độ */
+        .choice-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .choice-btn {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 0.25rem;
+            background-color: var(--color-bg);
+            border: 1.5px solid var(--color-border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-family: var(--font-family);
+        }
+
+        .choice-btn:hover {
+            border-color: var(--color-primary);
+            background-color: var(--color-primary-light);
+        }
+
+        .choice-btn.selected {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(29, 97, 157, 0.2);
+        }
+
+        .choice-val {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.15rem;
+        }
+
+        .choice-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            opacity: 0.8;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .choice-btn.selected .choice-label {
+            opacity: 1;
+        }
+
+        @media (max-width: 480px) {
+            .choice-group {
+                gap: 0.3rem;
+            }
+            .choice-btn {
+                padding: 0.6rem 0.1rem;
+            }
+            .choice-val {
+                font-size: 1rem;
+            }
+            .choice-label {
+                font-size: 0.6rem;
+            }
+        }
+
+        /* Màn hình kết quả */
+        .result-intro {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .rankings {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .rank-card {
+            background: var(--color-bg);
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
+            border: 1px solid var(--color-border);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .rank-badge {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: var(--color-text-muted);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0 0 10px 0;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .rank-card:first-child {
+            border-color: rgba(29, 97, 157, 0.3);
+            background: linear-gradient(to right, var(--color-card-bg), var(--color-primary-light));
+        }
+
+        .rank-card:first-child .rank-badge {
+            background-color: var(--color-primary);
+        }
+
+        .rank-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 0.5rem;
+        }
+
+        .rank-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--color-text-main);
+        }
+
+        .rank-score-info {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .rank-percentage {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--color-text-main);
+        }
+
+        .rank-raw {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+        }
+
+        .rank-bar-track {
+            height: 8px;
+            background-color: var(--color-border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .rank-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            background-color: var(--color-text-muted);
+            transition: width 1s ease-out;
+        }
+
+        .rank-card:first-child .rank-bar-fill {
+            background-color: var(--color-primary);
+        }
+
+        .rank-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-muted);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-dot.cuan-quan-tam { background-color: #EF4444; }
+        .status-dot.can-nuoi-duong { background-color: var(--color-warning); }
+        .status-dot.tuong-doi-tich-cuc { background-color: var(--color-primary); }
+        .status-dot.nguon-luc { background-color: var(--color-success); }
+
+        /* Giải thích và phản tư */
+        .explanation-section {
+            border-top: 1px solid var(--color-border);
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+
+        .explanation-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-text-main);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .explanation-text {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .reflection-box {
+            background-color: var(--color-primary-light);
+            padding: 1.5rem;
+            border-radius: 14px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(29, 97, 157, 0.1);
+        }
+
+        .reflection-box h4 {
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .prompt-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .prompt-item {
+            background-color: var(--color-card-bg);
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-left: 3px solid var(--color-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .closing-text {
+            text-align: center;
+            font-style: italic;
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+            margin: 2.5rem 0 1.5rem 0;
+            line-height: 1.6;
+            border-top: 1px dashed var(--color-border);
+            padding-top: 1.5rem;
+        }
+
+        /* Toasts thông báo */
+        .toast {
+            position: fixed;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333333;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: bottom 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            z-index: 999;
+            pointer-events: none;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            bottom: 24px;
+            opacity: 1;
+        }
+
+        .error-message {
+            background-color: #FEE2E2;
+            color: #991B1B;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid #FCA5A5;
+            animation: shake 0.3s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            margin-top: auto;
+            border-top: 1px solid var(--color-border);
+            width: 100%;
+        }
+
+        .footer p {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Khối hiển thị Logo thông minh: Ưu tiên ảnh thật, tự động fallback sang SVG -->
+        <div class="brand-header-zone">
+            <!-- Thử tải ảnh logo thật -->
+            <img src="logo healthiervtb (1).png" alt="HealthierVTB Logo" class="brand-logo-img" id="main-brand-logo" onerror="handleLogoFallback()">
+            
+            <!-- Logo dự phòng vẽ hoàn toàn bằng code SVG sắc nét khi không có file ảnh -->
+            <svg class="brand-logo-fallback" id="fallback-brand-logo" viewBox="0 0 400 240">
+                <!-- Tái tạo Cây Trái Tim & Con Người của HealthierVTB -->
+                <!-- Thân người / Trực quan hóa phần gốc cây -->
+                <path d="M 160,135 C 180,150 188,165 188,200 L 212,200 C 212,165 220,150 240,135 C 228,135 214,153 200,153 C 186,153 172,135 160,135 Z" fill="#1d619d" />
+                <circle cx="200" cy="115" r="16" fill="#1d619d" />
+                <path d="M 130,210 Q 200,203 270,210" stroke="#1d619d" stroke-width="4.5" stroke-linecap="round" fill="none" />
+                
+                <!-- Tán cây hình trái tim phong phú -->
+                <!-- Trái tim trung tâm -->
+                <path d="M200 85 C197 73, 185 68, 175 75 C165 83, 182 102, 200 114 C218 102, 235 83, 225 75 C215 68, 203 73, 200 85 Z" fill="#2fa9e0" />
+                
+                <!-- Trái tim đỏ 1 -->
+                <path d="M150 95 C141 87, 131 92, 128 102 C125 112, 142 127, 155 135 C168 127, 185 112, 182 102 C179 92, 169 87, 160 95 Z" fill="#b62a4b" transform="translate(-10, -5)" />
+                <!-- Trái tim đỏ 2 -->
+                <path d="M250 95 C241 87, 231 92, 228 102 C225 112, 242 127, 255 135 C268 127, 285 112, 282 102 C279 92, 269 87, 260 95 Z" fill="#7a4d80" transform="translate(10, -5)" />
+                
+                <!-- Trái tim đỉnh -->
+                <path d="M200 45 C197 37, 189 33, 181 37 C173 41, 184 57, 200 66 C216 57, 227 41, 219 37 C211 33, 203 37, 200 45 Z" fill="#1d619d" transform="translate(-30, -5)" />
+                <path d="M200 45 C197 37, 189 33, 181 37 C173 41, 184 57, 200 66 C216 57, 227 41, 219 37 C211 33, 203 37, 200 45 Z" fill="#b62a4b" transform="translate(30, -5)" />
+                
+                <!-- Trái tim hai bên rìa -->
+                <path d="M110 75 C101 70, 93 75, 93 85 C93 95, 108 108, 120 114 C132 108, 147 95, 147 85 C147 75, 139 70, 130 75 Z" fill="#1d619d" transform="translate(-35, 15) rotate(-15 130 75)" />
+                <path d="M290 75 C281 70, 273 75, 273 85 C273 95, 288 108, 300 114 C312 108, 327 95, 327 85 C327 75, 319 70, 310 75 Z" fill="#2fa9e0" transform="translate(35, 15) rotate(15 290 75)" />
+                
+                <!-- Trái tim nhỏ dưới cùng 2 bên -->
+                <path d="M120 140 C113 135, 105 139, 105 147 C105 155, 118 165, 128 170 C138 165, 151 155, 151 147 C151 139, 143 135, 136 140 Z" fill="#b62a4b" transform="translate(-25, 10) rotate(-25 136 140)" />
+                <path d="M280 140 C273 135, 265 139, 265 147 C265 155, 278 165, 288 170 C298 165, 311 155, 311 147 C311 139, 303 135, 296 140 Z" fill="#1d619d" transform="translate(25, 10) rotate(25 296 140)" />
+
+                <!-- Trái tim tím đỉnh trái & đỉnh phải -->
+                <path d="M150 45 C141 37, 131 42, 128 52 C125 62, 142 77, 155 85 C168 77, 185 62, 182 52 C179 42, 169 37, 160 45 Z" fill="#7a4d80" transform="translate(-20, -10)" />
+                <path d="M250 45 C241 37, 231 42, 228 52 C225 62, 242 77, 255 85 C268 77, 285 62, 282 52 C279 42, 269 37, 260 45 Z" fill="#2fa9e0" transform="translate(20, -10)" />
+
+                <!-- Trái tim xanh cyan xa nhất bên trái -->
+                <path d="M90 100 C83 95, 75 99, 75 107 C75 115, 88 125, 98 130 C108 125, 121 115, 121 107 C121 99, 113 95, 106 100 Z" fill="#2fa9e0" transform="translate(-25, 10) rotate(-35 106 100)" />
+
+                <!-- Dải chữ thương hiệu chuẩn phong cách HealthierVTB -->
+                <text x="200" y="215" font-family="system-ui, sans-serif" font-size="16" font-weight="800" fill="#1d619d" text-anchor="middle" letter-spacing="1">HEALTHIER VIETINBANK</text>
+                <text x="200" y="232" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#2fa9e0" text-anchor="middle">Healthy Mind <tspan fill="#b62a4b">•</tspan> Healthy Life</text>
+            </svg>
+        </div>
+
+        <!-- MÀN HÌNH 1: GIỚI THIỆU (INTRO) -->
+        <div id="screen-intro" class="screen card active">
+            <h2>Mối quan hệ trong công sở</h2>
+            
+            <div class="quote-box">
+                “Hạnh phúc nơi làm việc không chỉ là điều ta nhận được từ tổ chức, mà còn là cách ta chủ động xây dựng mối quan hệ với bản thân, với đồng nghiệp, với môi trường làm việc và với công việc của mình.”
+            </div>
+            
+            <div class="note-box">
+                Đây là công cụ tự phản tư, không phải công cụ đánh giá con người, đánh giá năng lực hay chẩn đoán tâm lý.
+            </div>
+
+            <div class="action-group">
+                <button class="btn btn-primary" id="btn-start">
+                    Bắt đầu phản tư
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- MÀN HÌNH 2: HƯỚNG DẪN (INSTRUCTIONS) -->
+        <div id="screen-instructions" class="screen card">
+            <h2>Hướng dẫn thực hiện</h2>
+            
+            <p class="description">Với mỗi phát biểu, hãy chọn mức độ phản ánh trải nghiệm của bạn trong thời gian gần đây nhất:</p>
+            
+            <div class="scale-info-list">
+                <div class="scale-item">
+                    <span class="scale-num">1</span>
+                    <span class="scale-text">Không bao giờ</span>
+                </div>
+                <div class="scale-item">
+                    <span class="scale-num">2</span>
+                    <span class="scale-text">Hiếm khi</span>
+                </div>
+                <div class="scale-item">
+                    <span class="scale-num">3</span>
+                    <span class="scale-text">Thỉnh thoảng</span>
+                </div>
+                <div class="scale-item">
+                    <span class="scale-num">4</span>
+                    <span class="scale-text">Thường xuyên</span>
+                </div>
+                <div class="scale-item">
+                    <span class="scale-num">5</span>
+                    <span class="scale-text">Luôn luôn</span>
+                </div>
+            </div>
+
+            <div class="action-group">
+                <button class="btn btn-primary" id="btn-understand">Tôi đã hiểu & sẵn sàng</button>
+            </div>
+        </div>
+
+        <!-- MÀN HÌNH 3: KHẢO SÁT (SURVEY) -->
+        <div id="screen-survey" class="screen card">
+            
+            <!-- Tiến trình tổng quát -->
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="progress-text">Phần 1/4</span>
+                    <span id="progress-percent">25% hoàn thành</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Header phần hiện tại -->
+            <div class="section-header-box">
+                <span class="section-tag" id="survey-section-tag">Mối quan hệ</span>
+                <h3 id="survey-section-title" style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--color-primary);"></h3>
+                <p class="section-desc" id="survey-section-desc"></p>
+            </div>
+
+            <!-- Vùng hiển thị thông báo lỗi khi chưa điền hết -->
+            <div class="error-message" id="survey-error">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <span>Bạn vui lòng trả lời đầy đủ các câu hỏi trước khi tiếp tục.</span>
+            </div>
+
+            <!-- Danh sách 12 câu hỏi -->
+            <div class="questions-list" id="questions-container">
+                <!-- Nội dung các câu hỏi sẽ được sinh tự động từ JavaScript -->
+            </div>
+
+            <!-- Nhóm nút điều hướng khảo sát -->
+            <div class="action-group" style="margin-top: 2.5rem;">
+                <button class="btn btn-primary" id="btn-survey-next">
+                    Tiếp tục
+                </button>
+            </div>
+        </div>
+
+        <!-- MÀN HÌNH 4: KẾT QUẢ (RESULT) -->
+        <div id="screen-result" class="screen card">
+            <div class="result-intro">
+                <span class="section-tag" style="background-color: var(--color-primary-light); color: var(--color-primary);">Kết quả phản tư</span>
+                <h2 style="margin-top: 0.5rem; margin-bottom: 0.5rem;">Bản đồ mối quan hệ trong công sở của bạn</h2>
+                <p style="color: var(--color-text-muted); font-size: 0.95rem;">Biểu đồ phản ánh mức độ bền vững trong các mối quan hệ tại nơi làm việc.</p>
+            </div>
+
+            <!-- Bảng xếp hạng 4 mối quan hệ -->
+            <div class="rankings" id="rankings-container">
+                <!-- Danh sách xếp hạng sẽ sinh tự động bằng JS -->
+            </div>
+
+            <!-- Phần giải thích bổ sung -->
+            <div class="explanation-section">
+                <div class="explanation-title">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    Điều kết quả này có thể gợi mở
+                </div>
+                <p class="explanation-text">
+                    Kết quả phản ánh cách bạn đang chủ động xây dựng những mối quan hệ quan trọng trong đời sống công sở tại thời điểm hiện tại. <br><br>
+                    Điểm số cao có thể cho thấy đây là một nguồn lực đang nâng đỡ trải nghiệm làm việc của bạn. <br><br>
+                    Điểm số thấp không phải là một đánh giá về con người bạn, mà có thể là lời nhắc rằng đây là một mối quan hệ đang cần thêm sự quan tâm và đầu tư.
+                </p>
+
+                <!-- Câu hỏi gợi ý phản tư cho phần điểm thấp nhất -->
+                <div class="reflection-box" id="reflection-container">
+                    <!-- Sẽ sinh tự động thông tin phản tư dựa vào phần thấp điểm nhất -->
+                </div>
+            </div>
+
+            <!-- Thông điệp kết luận -->
+            <div class="closing-text">
+                “Hạnh phúc nơi làm việc không phải là trạng thái luôn tích cực, mà là khả năng chủ động nuôi dưỡng những mối quan hệ giúp ta có thể làm việc, phát triển và đồng hành cùng người khác một cách bền vững.”
+            </div>
+
+            <!-- Các nút hành động kết quả -->
+            <div class="action-group">
+                <button class="btn btn-primary" id="btn-copy">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                    Sao chép kết quả
+                </button>
+                <button class="btn btn-outline" id="btn-restart">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                    Làm lại khảo sát
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2026 Mối quan hệ trong công sở • Healthier VietinBank</p>
+        </div>
+    </div>
+
+    <!-- Toast thông báo góc dưới màn hình -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // KIỂM TRA & XỬ LÝ FALLBACK LOGO
+        function handleLogoFallback() {
+            // Khi không tìm thấy file ảnh logo, chuyển sang hiển thị SVG vẽ bằng code
+            document.getElementById("main-brand-logo").style.display = "none";
+            document.getElementById("fallback-brand-logo").style.display = "block";
+        }
+
+        // CẤU TRÚC DỮ LIỆU KHẢO SÁT
+        const sections = [
+            {
+                id: "self",
+                title: "Mối quan hệ với bản thân",
+                description: "Cách tôi chăm sóc, phục hồi năng lượng và giữ ranh giới lành mạnh cho chính mình.",
+                questions: [
+                    { id: "self-1", text: "Tôi thường cảm thấy mệt mỏi trong ngày và không được nghỉ ngơi đầy đủ.", reverse: true },
+                    { id: "self-2", text: "Tôi quá bận hoặc quá mệt đến mức bỏ bữa, ăn uống thất thường hoặc lựa chọn thực phẩm không lành mạnh.", reverse: true },
+                    { id: "self-3", text: "Tôi cảm thấy mình đang bị kéo căng giữa công việc và cuộc sống cá nhân, khiến những sở thích hay nhu cầu riêng bị gác lại.", reverse: true },
+                    { id: "self-4", text: "Tôi nhận thấy mình dễ cáu gắt, khó chịu hoặc mất kiên nhẫn hơn với người thân hay đồng nghiệp.", reverse: true },
+                    { id: "self-5", text: "Tôi thường cảm thấy thiếu thời gian chất lượng cho gia đình và bạn bè.", reverse: true },
+                    { id: "self-6", text: "Tôi cảm thấy không còn nhiều thời gian cho cuộc sống ngoài công việc và các trách nhiệm cá nhân.", reverse: true },
+                    { id: "self-7", text: "Tôi thường bỏ lỡ những dịp gặp gỡ bạn bè và cảm thấy mình dần xa cách với các mối quan hệ xã hội.", reverse: true },
+                    { id: "self-8", text: "Tôi khó có thể tạm gác công việc sang một bên và vẫn tiếp tục lo lắng về công việc ngay cả khi không làm việc.", reverse: true },
+                    { id: "self-9", text: "Tôi thường xuyên làm việc muộn, làm cuối tuần hoặc làm đêm để theo kịp công việc và các trách nhiệm khác.", reverse: true },
+                    { id: "self-10", text: "Trách nhiệm gia đình và áp lực công việc thường xung đột với nhau, khiến tôi cảm thấy căng thẳng và lúng túng.", reverse: true },
+                    { id: "self-11", text: "Tôi biết dành thời gian để nghỉ ngơi và phục hồi năng lượng.", reverse: false },
+                    { id: "self-12", text: "Tôi biết đặt ranh giới lành mạnh giữa công việc và đời sống cá nhân.", reverse: false }
+                ]
+            },
+            {
+                id: "colleagues",
+                title: "Mối quan hệ với đồng nghiệp",
+                description: "Cách tôi lắng nghe, kết nối, hỗ trợ và hợp tác với những người cùng làm việc.",
+                questions: [
+                    { id: "colleagues-1", text: "Tôi chú tâm lắng nghe khi người khác nói với mình.", reverse: false },
+                    { id: "colleagues-2", text: "Tôi thường tránh giao tiếp với đồng nghiệp và chỉ trao đổi khi thật cần thiết.", reverse: true },
+                    { id: "colleagues-3", text: "Tôi sẵn sàng hỗ trợ và giúp đỡ đồng nghiệp khi có thể.", reverse: false },
+                    { id: "colleagues-4", text: "Tôi ngại nhờ người khác giúp đỡ khi gặp khó khăn.", reverse: true },
+                    { id: "colleagues-5", text: "Tôi khó tiếp nhận những góp ý hoặc phê bình dành cho mình.", reverse: true },
+                    { id: "colleagues-6", text: "Tôi biết cách đưa ra góp ý một cách khéo léo và tôn trọng.", reverse: false },
+                    { id: "colleagues-7", text: "Tôi thường cảm thấy khó chịu hoặc bực bội với đồng nghiệp.", reverse: true },
+                    { id: "colleagues-8", text: "Tôi tin tưởng phần lớn đồng nghiệp của mình.", reverse: false },
+                    { id: "colleagues-9", text: "Tôi thích làm theo cách của mình và không dễ thỏa hiệp.", reverse: true },
+                    { id: "colleagues-10", text: "Tôi thường không bày tỏ quan điểm vì sợ người khác không đồng tình.", reverse: true },
+                    { id: "colleagues-11", text: "Tôi giữ được sự bình tĩnh và không dễ nổi nóng với đồng nghiệp.", reverse: false },
+                    { id: "colleagues-12", text: "Tôi ghi nhận và trân trọng sự đóng góp của người khác.", reverse: false }
+                ]
+            },
+            {
+                id: "environment",
+                title: "Mối quan hệ với môi trường làm việc",
+                description: "Cách tôi gìn giữ, sử dụng và cùng kiến tạo không gian làm việc chung.",
+                questions: [
+                    { id: "environment-1", text: "Tôi giữ gìn khu vực làm việc của mình gọn gàng và ngăn nắp.", reverse: false },
+                    { id: "environment-2", text: "Tôi có ý thức giữ gìn không gian và tài sản chung nơi làm việc.", reverse: false },
+                    { id: "environment-3", text: "Tôi sử dụng các nguồn lực và trang thiết bị chung một cách có trách nhiệm.", reverse: false },
+                    { id: "environment-4", text: "Khi nhận thấy những vấn đề trong môi trường làm việc, tôi chủ động tìm cách cải thiện.", reverse: false },
+                    { id: "environment-5", text: "Tôi thường bỏ qua những bất cập trong môi trường làm việc nếu chúng không ảnh hưởng trực tiếp đến mình.", reverse: true },
+                    { id: "environment-6", text: "Tôi góp phần tạo nên bầu không khí tích cực và dễ chịu tại nơi làm việc.", reverse: false },
+                    { id: "environment-7", text: "Tôi cân nhắc tác động của hành vi của mình đến sự thoải mái và thuận tiện của người khác.", reverse: false },
+                    { id: "environment-8", text: "Tôi trân trọng những nỗ lực nhằm xây dựng một môi trường làm việc tích cực.", reverse: false },
+                    { id: "environment-9", text: "Tôi lên tiếng hoặc đề xuất khi nhận thấy môi trường làm việc có thể được cải thiện.", reverse: false },
+                    { id: "environment-10", text: "Tôi cố gắng để lại không gian chung trong tình trạng tốt hơn so với khi mình sử dụng.", reverse: false },
+                    { id: "environment-11", text: "Tôi có khả năng thích nghi và duy trì tinh thần tích cực ngay cả khi điều kiện làm việc chưa thực sự thuận lợi.", reverse: false },
+                    { id: "environment-12", text: "Tôi cảm thấy mình có trách nhiệm và sự gắn bó đối với môi trường làm việc của mình.", reverse: false }
+                ]
+            },
+            {
+                id: "job",
+                title: "Mối quan hệ với công việc",
+                description: "Cách tôi chủ động chịu trách nhiệm, tìm ý nghĩa và phát triển thông qua công việc.",
+                questions: [
+                    { id: "job-1", text: "Tôi chủ động chịu trách nhiệm đối với công việc của mình.", reverse: false },
+                    { id: "job-2", text: "Tôi luôn tìm kiếm cách thức để cải thiện hiệu quả làm việc.", reverse: false },
+                    { id: "job-3", text: "Tôi cố gắng tìm thấy ý nghĩa và giá trị trong công việc mình đang làm.", reverse: false },
+                    { id: "job-4", text: "Tôi thường chỉ tập trung hoàn thành nhiệm vụ mà ít suy nghĩ về giá trị hoặc mục đích của công việc.", reverse: true },
+                    { id: "job-5", text: "Tôi chủ động hành động thay vì chỉ chờ đợi hướng dẫn hoặc yêu cầu từ người khác.", reverse: false },
+                    { id: "job-6", text: "Tôi dành thời gian để học hỏi và phát triển những kỹ năng giúp mình làm việc tốt hơn.", reverse: false },
+                    { id: "job-7", text: "Tôi vẫn duy trì sự cam kết và trách nhiệm ngay cả khi công việc trở nên khó khăn.", reverse: false },
+                    { id: "job-8", text: "Tôi cố gắng hiểu công việc của mình đóng góp như thế nào vào mục tiêu chung của tổ chức.", reverse: false },
+                    { id: "job-9", text: "Tôi thường trì hoãn hoặc né tránh những nhiệm vụ mà mình thấy khó khăn hoặc không hứng thú.", reverse: true },
+                    { id: "job-10", text: "Tôi sẵn sàng đóng góp nhiều hơn phạm vi công việc được giao khi cần thiết.", reverse: false },
+                    { id: "job-11", text: "Tôi chủ động tìm kiếm cơ hội học hỏi và phát triển thông qua công việc.", reverse: false },
+                    { id: "job-12", text: "Tôi thường suy ngẫm về việc liệu công việc hiện tại có phù hợp với những giá trị và định hướng của bản thân hay không.", reverse: false }
+                ]
+            }
+        ];
+
+        // ĐỐI TƯỢNG PHẢN TƯ GỢI Ý CHO PHẦN THẤP ĐIỂM NHẤT
+        const reflectionPrompts = {
+            self: {
+                title: "Mối quan hệ với bản thân",
+                prompts: [
+                    "Điều gì đang lấy đi năng lượng của tôi nhiều nhất?",
+                    "Tôi đang bỏ quên nhu cầu nào của chính mình?",
+                    "Một hành động nhỏ nào có thể giúp tôi phục hồi năng lượng trong tuần này?"
+                ]
+            },
+            colleagues: {
+                title: "Mối quan hệ với đồng nghiệp",
+                prompts: [
+                    "Tôi đang né tránh điều gì trong các mối quan hệ công việc?",
+                    "Tôi có thể bắt đầu xây dựng sự kết nối bằng hành động nhỏ nào?",
+                    "Tôi có thể lắng nghe hoặc nhờ hỗ trợ từ ai nhiều hơn?"
+                ]
+            },
+            environment: {
+                title: "Mối quan hệ với môi trường làm việc",
+                prompts: [
+                    "Tôi đang xem nơi làm việc là một không gian mình cùng kiến tạo hay chỉ là nơi mình sử dụng?",
+                    "Tôi có thể đóng góp điều gì để môi trường này trở nên dễ chịu hơn?",
+                    "Một thay đổi nhỏ nào trong không gian chung có thể tạo tác động tích cực?"
+                ]
+            },
+            job: {
+                title: "Mối quan hệ với công việc",
+                prompts: [
+                    "Tôi còn nhìn thấy ý nghĩa trong công việc mình đang làm không?",
+                    "Điều gì khiến tôi cảm thấy có giá trị nhất trong công việc?",
+                    "Tôi có thể chủ động cải thiện cách làm việc của mình ở điểm nào?"
+                ]
+            }
+        };
+
+        // TRẠNG THÁI ỨNG DỤNG (STATE)
+        let currentState = {
+            currentScreen: "intro", // intro, instructions, survey, result
+            currentSectionIndex: 0, // 0 -> 3
+            answers: {} // { "question-id": score_value }
+        };
+
+        // KHỞI TẠO DOM ELEMENTS
+        const screens = {
+            intro: document.getElementById("screen-intro"),
+            instructions: document.getElementById("screen-instructions"),
+            survey: document.getElementById("screen-survey"),
+            result: document.getElementById("screen-result")
+        };
+
+        const btnStart = document.getElementById("btn-start");
+        const btnUnderstand = document.getElementById("btn-understand");
+        const btnSurveyNext = document.getElementById("btn-survey-next");
+        const btnCopy = document.getElementById("btn-copy");
+        const btnRestart = document.getElementById("btn-restart");
+
+        const progressText = document.getElementById("progress-text");
+        const progressPercent = document.getElementById("progress-percent");
+        const progressFill = document.getElementById("progress-fill");
+
+        const surveySectionTag = document.getElementById("survey-section-tag");
+        const surveySectionTitle = document.getElementById("survey-section-title");
+        const surveySectionDesc = document.getElementById("survey-section-desc");
+        const surveyError = document.getElementById("survey-error");
+        const questionsContainer = document.getElementById("questions-container");
+
+        const rankingsContainer = document.getElementById("rankings-container");
+        const reflectionContainer = document.getElementById("reflection-container");
+        const toastElement = document.getElementById("toast");
+
+        // HÀM CHUYỂN MÀN HÌNH
+        function showScreen(screenKey) {
+            Object.keys(screens).forEach(key => {
+                if (key === screenKey) {
+                    screens[key].classList.add("active");
+                } else {
+                    screens[key].classList.remove("active");
+                }
+            });
+            currentState.currentScreen = screenKey;
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        // TOAST NOTIFICATION THUẦN
+        function showToast(message, isSuccess = true) {
+            toastElement.innerText = message;
+            toastElement.style.backgroundColor = isSuccess ? "var(--color-primary)" : "#DC2626";
+            toastElement.classList.add("show");
+            setTimeout(() => {
+                toastElement.classList.remove("show");
+            }, 3000);
+        }
+
+        // LÀM MỚI BÀI KHẢO SÁT
+        function resetSurvey() {
+            currentState.currentSectionIndex = 0;
+            currentState.answers = {};
+            surveyError.style.display = "none";
+            showScreen("intro");
+        }
+
+        // TÍNH TOÁN ĐIỂM
+        function calculateResults() {
+            const results = [];
+
+            sections.forEach(sec => {
+                let sectionScore = 0;
+                sec.questions.forEach(q => {
+                    const rawScore = currentState.answers[q.id];
+                    // Logic tính điểm nghịch đảo (reverse scoring)
+                    const finalScore = q.reverse ? (6 - rawScore) : rawScore;
+                    sectionScore += finalScore;
+                });
+
+                const percentage = Math.round((sectionScore / 60) * 100);
+                results.push({
+                    id: sec.id,
+                    title: sec.title,
+                    score: sectionScore,
+                    percentage: percentage,
+                    originalOrder: sections.findIndex(s => s.id === sec.id)
+                });
+            });
+
+            // SẮP XẾP KẾT QUẢ: Cao nhất xuống thấp nhất.
+            // Nếu bằng điểm nhau, giữ nguyên thứ tự ban đầu trong mảng sections.
+            results.sort((a, b) => {
+                if (b.percentage !== a.percentage) {
+                    return b.percentage - a.percentage; // Sắp xếp theo phần trăm giảm dần
+                }
+                return a.originalOrder - b.originalOrder; // Giữ nguyên thứ tự gốc của mảng nếu bằng điểm
+            });
+
+            return results;
+        }
+
+        // LẤY NHÃN GIẢI THÍCH DỰA TRÊN PHẦN TRĂM ĐIỂM
+        function getInterpretationLabel(percentage) {
+            if (percentage >= 0 && percentage <= 39) {
+                return { text: "Cần được quan tâm thêm", class: "cuan-quan-tam" };
+            } else if (percentage >= 40 && percentage <= 59) {
+                return { text: "Đang cần nuôi dưỡng", class: "can-nuoi-duong" };
+            } else if (percentage >= 60 && percentage <= 79) {
+                return { text: "Tương đối tích cực", class: "tuong-doi-tich-cuc" };
+            } else if (percentage >= 80 && percentage <= 100) {
+                return { text: "Nguồn lực nổi bật", class: "nguon-luc" };
+            }
+            return { text: "Không xác định", class: "" };
+        }
+
+        // RENDER GIAO DIỆN KẾT QUẢ
+        function renderResults() {
+            const rankedResults = calculateResults();
+            
+            // Xóa nội dung cũ trong rankingsContainer
+            rankingsContainer.innerHTML = "";
+
+            // Render 4 phần kết quả đã xếp hạng
+            rankedResults.forEach((res, index) => {
+                const interpretation = getInterpretationLabel(res.percentage);
+                const rankCard = document.createElement("div");
+                rankCard.className = "rank-card";
+
+                rankCard.innerHTML = `
+                    <div class="rank-badge">HẠNG ${index + 1}</div>
+                    <div class="rank-header">
+                        <div class="rank-title">${res.title}</div>
+                        <div class="rank-score-info">
+                            <span class="rank-percentage">${res.percentage}%</span>
+                            <div class="rank-raw">Điểm: ${res.score}/60</div>
+                        </div>
+                    </div>
+                    <div class="rank-bar-track">
+                        <div class="rank-bar-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="rank-status">
+                        <span class="status-dot ${interpretation.class}"></span>
+                        <span>Đánh giá: ${interpretation.text}</span>
+                    </div>
+                `;
+
+                rankingsContainer.appendChild(rankCard);
+
+                // Tạo hiệu ứng chạy thanh progress bar sinh động
+                setTimeout(() => {
+                    const fill = rankCard.querySelector(".rank-bar-fill");
+                    if (fill) fill.style.width = `${res.percentage}%`;
+                }, 100);
+            });
+
+            // Tìm phần có điểm thấp nhất ở cuối mảng đã sắp xếp
+            const lowestSection = rankedResults[rankedResults.length - 1];
+            const refData = reflectionPrompts[lowestSection.id];
+
+            // Render gợi ý phản tư chỉ cho phần thấp điểm nhất
+            reflectionContainer.innerHTML = `
+                <h4>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                    Gợi ý phản tư cho: ${refData.title}
+                </h4>
+                <p class="explanation-text" style="margin-bottom: 1rem;">
+                    Vì đây là mối quan hệ có điểm số thấp nhất hiện tại của bạn, hãy dành vài phút chậm lại để tự vấn và trả lời ba câu hỏi dưới đây:
+                </p>
+                <ul class="prompt-list">
+                    ${refData.prompts.map(prompt => `<li class="prompt-item">${prompt}</li>`).join('')}
+                </ul>
+            `;
+        }
+
+        // RENDER KHẢO SÁT THEO PHẦN
+        function renderSurveySection() {
+            const currentSec = sections[currentState.currentSectionIndex];
+            
+            // Cập nhật tiến trình tổng quan
+            const stepPercent = (currentState.currentSectionIndex + 1) * 25;
+            progressText.innerText = `Phần ${currentState.currentSectionIndex + 1}/4`;
+            progressPercent.innerText = `${stepPercent}% hoàn thành`;
+            progressFill.style.width = `${stepPercent}%`;
+
+            // Thông tin phần hiện tại
+            surveySectionTag.innerText = `Chủ đề ${currentState.currentSectionIndex + 1}`;
+            surveySectionTitle.innerText = currentSec.title;
+            surveySectionDesc.innerText = currentSec.description;
+
+            // Ẩn thông báo lỗi khi tải phần mới
+            surveyError.style.display = "none";
+
+            // Xóa câu hỏi cũ
+            questionsContainer.innerHTML = "";
+
+            // Render 12 câu hỏi của phần hiện tại
+            currentSec.questions.forEach((q, qIndex) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.className = "question-item";
+
+                const questionLabel = document.createElement("div");
+                questionLabel.className = "question-text";
+                questionLabel.innerText = `${qIndex + 1}. ${q.text}`;
+                questionDiv.appendChild(questionLabel);
+
+                const choiceGroup = document.createElement("div");
+                choiceGroup.className = "choice-group";
+
+                const choices = [
+                    { val: 1, label: "K.Bao Giờ" },
+                    { val: 2, label: "Hiếm Khi" },
+                    { val: 3, label: "T.Thoảng" },
+                    { val: 4, label: "T.Xuyên" },
+                    { val: 5, label: "Luôn Luôn" }
+                ];
+
+                choices.forEach(ch => {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "choice-btn";
+                    btn.setAttribute("aria-label", `Câu ${qIndex + 1}: mức ${ch.val} - ${ch.label}`);
+                    
+                    // Nếu đã chọn từ trước thì hiển thị trạng thái selected
+                    if (currentState.answers[q.id] === ch.val) {
+                        btn.classList.add("selected");
+                    }
+
+                    btn.innerHTML = `
+                        <span class="choice-val">${ch.val}</span>
+                        <span class="choice-label">${ch.label}</span>
+                    `;
+
+                    btn.addEventListener("click", () => {
+                        // Bỏ chọn nút cũ cùng hàng câu hỏi
+                        choiceGroup.querySelectorAll(".choice-btn").forEach(b => b.classList.remove("selected"));
+                        // Thêm class được chọn cho nút hiện tại
+                        btn.classList.add("selected");
+                        // Lưu kết quả vào state
+                        currentState.answers[q.id] = ch.val;
+                        // Ẩn lỗi nếu người dùng bắt đầu bổ sung đáp án
+                        surveyError.style.display = "none";
+                    });
+
+                    choiceGroup.appendChild(btn);
+                });
+
+                questionDiv.appendChild(choiceGroup);
+                questionsContainer.appendChild(questionDiv);
+            });
+
+            // Cập nhật tên nút cuối
+            if (currentState.currentSectionIndex === 3) {
+                btnSurveyNext.innerText = "Xem kết quả";
+            } else {
+                btnSurveyNext.innerText = "Tiếp tục";
+            }
+        }
+
+        // KIỂM TRA ĐIỀU KIỆN ĐÃ ĐIỀN ĐỦ 12 CÂU HỎI CHƯA
+        function validateCurrentSection() {
+            const currentSec = sections[currentState.currentSectionIndex];
+            for (let i = 0; i < currentSec.questions.length; i++) {
+                const qId = currentSec.questions[i].id;
+                if (currentState.answers[qId] === undefined) {
+                    return false; // Phát hiện câu hỏi chưa chọn đáp án
+                }
+            }
+            return true;
+        }
+
+        // SAO CHÉP KẾT QUẢ VÀO CLIPBOARD
+        function copyResultToClipboard() {
+            const rankedResults = calculateResults();
+            const lowestSection = rankedResults[rankedResults.length - 1];
+            const refData = reflectionPrompts[lowestSection.id];
+
+            let textToCopy = `=== KẾT QUẢ PHẢN TƯ: MỐI QUAN HỆ TRONG CÔNG SỞ ===\n`;
+            textToCopy += `Healthier VietinBank - Healthy Mind • Healthy Life\n\n`;
+            textToCopy += `Xếp hạng mức độ tích cực của các mối quan hệ:\n`;
+            
+            rankedResults.forEach((res, index) => {
+                const interpretation = getInterpretationLabel(res.percentage);
+                textToCopy += `${index + 1}. ${res.title}: ${res.percentage}% (${res.score}/60đ) - ${interpretation.text}\n`;
+            });
+
+            textToCopy += `\n---------------------------------------------\n`;
+            textToCopy += `Mối quan hệ cần lưu ý & ưu tiên đầu tư thêm:\n`;
+            textToCopy += `👉 ${refData.title}\n\n`;
+            textToCopy += `Các câu hỏi tự vấn dành cho bạn:\n`;
+            refData.prompts.forEach((prompt, index) => {
+                textToCopy += `❓ [Câu hỏi ${index + 1}] ${prompt}\n`;
+            });
+
+            textToCopy += `\n---------------------------------------------\n`;
+            textToCopy += `Thông điệp đồng hành:\n`;
+            textToCopy += `“Hạnh phúc nơi làm việc không phải là trạng thái luôn tích cực, mà là khả năng chủ động nuôi dưỡng những mối quan hệ giúp ta có thể làm việc, phát triển và đồng hành cùng người khác một cách bền vững.”\n\n`;
+            textToCopy += `Hãy lưu giữ kết quả này để cùng nhìn lại và điều chỉnh mỗi tuần bạn nhé!`;
+
+            try {
+                // Sử dụng phương thức chuẩn hỗ trợ cả iFrame sandbox
+                const tempTextarea = document.createElement("textarea");
+                tempTextarea.value = textToCopy;
+                tempTextarea.style.position = "fixed";
+                tempTextarea.style.opacity = "0";
+                document.body.appendChild(tempTextarea);
+                tempTextarea.select();
+                const successful = document.execCommand("copy");
+                document.body.removeChild(tempTextarea);
+
+                if (successful) {
+                    showToast("Đã sao chép kết quả.", true);
+                } else {
+                    showToast("Chưa thể sao chép tự động. Bạn có thể chọn và sao chép thủ công.", false);
+                }
+            } catch (err) {
+                showToast("Chưa thể sao chép tự động. Bạn có thể chọn và sao chép thủ công.", false);
+            }
+        }
+
+        // ĐĂNG KÝ SỰ KIỆN GIAO DIỆN
+        btnStart.addEventListener("click", () => {
+            showScreen("instructions");
+        });
+
+        btnUnderstand.addEventListener("click", () => {
+            showScreen("survey");
+            renderSurveySection();
+        });
+
+        btnSurveyNext.addEventListener("click", () => {
+            if (!validateCurrentSection()) {
+                surveyError.style.display = "flex";
+                // Cuộn mượt lên chỗ thông báo lỗi
+                surveyError.scrollIntoView({ behavior: "smooth", block: "center" });
+                return;
+            }
+
+            if (currentState.currentSectionIndex < 3) {
+                // Chuyển sang phần tiếp theo
+                currentState.currentSectionIndex++;
+                renderSurveySection();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            } else {
+                // Đi đến màn hình kết quả
+                renderResults();
+                showScreen("result");
+            }
+        });
+
+        btnCopy.addEventListener("click", () => {
+            copyResultToClipboard();
+        });
+
+        btnRestart.addEventListener("click", () => {
+            resetSurvey();
+        });
+
+        // Hỗ trợ khôi phục trạng thái khi tải lại
+        window.addEventListener("load", () => {
+            resetSurvey();
+        });
+    </script>
+</body>
+</html>
